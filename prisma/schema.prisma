@@ -47,14 +47,25 @@ model Session {
     @@index([userId])
 }
 
+enum UserRole {
+    ADMIN
+    USER
+}
+
 model User {
     id            String    @id @default(cuid())
     name          String?
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    teamId        String?
+    role          UserRole? @default(USER)
+    issues        Issue[]
     accounts      Account[]
     sessions      Session[]
+    Team          Team?     @relation(fields: [teamId], references: [id])
+
+    @@index([teamId])
 }
 
 model VerificationToken {
@@ -63,4 +74,65 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Team {
+    id     String  @id @default(cuid())
+    name   String
+    domain String  @unique
+    avatar String?
+    boards Board[]
+    users  User[]
+}
+
+model Board {
+    id      String   @id @default(cuid())
+    name    String
+    teamId  String
+    columns Column[]
+    tags    Tag[]
+    Team    Team     @relation(fields: [teamId], references: [id])
+
+    @@index([teamId])
+}
+
+model Column {
+    id      String  @id @default(cuid())
+    name    String
+    boardId String
+    issues  Issue[]
+    board   Board   @relation(fields: [boardId], references: [id])
+
+    @@index([boardId])
+}
+
+enum IssuePriority {
+    HIGH
+    MEDIUM
+    LOW
+}
+
+model Issue {
+    id          String        @id @default(cuid())
+    name        String
+    description String        @db.Text
+    priority    IssuePriority @default(MEDIUM)
+    columnId    String
+    assigneeId  String
+    tags        Tag[]
+    assignee    User          @relation(fields: [assigneeId], references: [id])
+    column      Column        @relation(fields: [columnId], references: [id])
+
+    @@index([assigneeId])
+    @@index([columnId])
+}
+
+model Tag {
+    id      String  @id @default(cuid())
+    name    String
+    boardId String
+    issues  Issue[]
+    board   Board   @relation(fields: [boardId], references: [id])
+
+    @@index([boardId])
 }
