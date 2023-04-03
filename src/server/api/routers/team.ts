@@ -50,8 +50,9 @@ export const teamRouter = createTRPCRouter({
       try {
         await ctx.prisma.team.create({
           data: {
-            ...input,
-
+            name: input.name,
+            domain: input.domain,
+            avatar: input.avatar,
             boards: {
               create: {
                 name: "Example",
@@ -85,7 +86,7 @@ export const teamRouter = createTRPCRouter({
       try {
         await ctx.prisma.team.delete({
           where: {
-            ...input,
+            id: input.id,
           },
         });
       } catch (error) {
