@@ -2,6 +2,13 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
+export const CreateBoardScheme = z.object({
+  name: z.string(),
+  teamId: z.string(),
+});
+
+export type CreateBoardType = z.infer<typeof CreateBoardScheme>;
+
 export const boardRouter = createTRPCRouter({
   // QUERIES:
   getAll: protectedProcedure
@@ -22,7 +29,7 @@ export const boardRouter = createTRPCRouter({
 
   // MUTATIONS:
   create: protectedProcedure
-    .input(z.object({ name: z.string() }))
+    .input(CreateBoardScheme)
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.board.create({
