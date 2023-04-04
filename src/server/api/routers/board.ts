@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
 export const CreateBoardScheme = z.object({
   name: z.string(),
@@ -38,10 +38,10 @@ export const boardRouter = createTRPCRouter({
             teamId: ctx.session.user.teamId,
             columns: {
               create: [
-                { name: "Backlog" },
-                { name: "Todo" },
-                { name: "In Progress" },
-                { name: "Done" },
+                { name: 'Backlog' },
+                { name: 'Todo' },
+                { name: 'In Progress' },
+                { name: 'Done' },
               ],
             },
           },

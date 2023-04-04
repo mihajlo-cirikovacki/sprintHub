@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
-} from "~/server/api/trpc";
+} from '~/server/api/trpc';
 
 export const CreateTeamSchema = z.object({
   name: z.string(),
@@ -37,13 +37,13 @@ export const teamRouter = createTRPCRouter({
             avatar: input.avatar,
             boards: {
               create: {
-                name: "Example",
+                name: 'Example',
                 columns: {
                   create: [
-                    { name: "Backlog" },
-                    { name: "Todo" },
-                    { name: "In Progress" },
-                    { name: "Done" },
+                    { name: 'Backlog' },
+                    { name: 'Todo' },
+                    { name: 'In Progress' },
+                    { name: 'Done' },
                   ],
                 },
               },

@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
 export enum IssuePriorityEnum {
-  HIGH = "HIGH",
-  MEDIUM = "MEDIUM",
-  LOW = "LOW",
+  HIGH = 'HIGH',
+  MEDIUM = 'MEDIUM',
+  LOW = 'LOW',
 }
 
 export const createIssueScheme = z.object({
