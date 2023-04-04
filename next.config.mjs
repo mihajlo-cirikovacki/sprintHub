@@ -18,5 +18,17 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  // === Disable builds on Vercel, in order to get faster builds.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
+  swcMinify: true,
+  // ===
 };
 export default config;
