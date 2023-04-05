@@ -42,6 +42,7 @@ export const Form = <
   return (
     <form
       className={clsx(['space-y-6', className])}
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       onSubmit={methods.handleSubmit(onSubmit)}
       id={id}
     >

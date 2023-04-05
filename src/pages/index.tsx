@@ -5,7 +5,6 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { z } from 'zod';
 
 import { api } from '~/utils/api';
-import { useState } from 'react';
 import { Form } from '~/components/Form/form';
 import { SelectField } from '~/components/Form/selectField';
 import { InputField } from '~/components/Form/inputField';
@@ -14,7 +13,7 @@ const schema = z
   .object({
     teamName: z.string().min(1, 'Required'),
     domain: z.string().min(1, 'Required'),
-    avatar: z.string().optional(),
+    // avatar: z.string().optional(),
   })
   .or(
     z.object({
@@ -25,23 +24,24 @@ const schema = z
 type RegisterValues = {
   teamName: string;
   domain: string;
-  avatar?: string;
+  // avatar?: string;
   teamId: string;
 };
 
 const team = [{ name: 'test', id: '4234234f' }];
 
 const RegisterForm = () => {
-  const [chooseTeam, setChooseTeam] = useState(false);
+  // const [chooseTeam, setChooseTeam] = useState(false);
+  const chooseTeam = false;
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: RegisterValues) => {
     console.log(data);
   };
 
   return (
     <div>
       <Form<RegisterValues, typeof schema>
-        onSubmit={(values) => {
+        onSubmit={(values: RegisterValues) => {
           onSubmit(values);
         }}
         schema={schema}
@@ -72,12 +72,12 @@ const RegisterForm = () => {
                   error={formState.errors['domain']}
                   registration={register('domain')}
                 />
-                <InputField
-                  type="file"
+                {/* <InputField
+                  type="text"
                   label="Avatar"
                   error={formState.errors['avatar']}
                   registration={register('avatar')}
-                />
+                /> */}
               </>
             )}
             <button type="submit" className="w-full bg-green-200">
