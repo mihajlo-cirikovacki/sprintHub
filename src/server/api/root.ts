@@ -4,6 +4,7 @@ import { teamRouter } from '~/server/api/routers/team';
 import { boardRouter } from '~/server/api/routers/board';
 import { issueRouter } from '~/server/api/routers/issue';
 import { tagRouter } from '~/server/api/routers/tag';
+import { userRouter } from '~/server/api/routers/user';
 
 /**
  * This is the primary router for your server.
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   board: boardRouter,
   issue: issueRouter,
   tag: tagRouter,
+  user: userRouter,
 });
 
 // export type definition of API
