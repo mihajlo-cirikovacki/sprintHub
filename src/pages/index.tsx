@@ -2,98 +2,12 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { z } from 'zod';
-
+import { RegisterForm } from '~/components/RegisterForm';
 import { api } from '~/utils/api';
-import { Form } from '~/components/Form/form';
-import { SelectField } from '~/components/Form/selectField';
-import { InputField } from '~/components/Form/inputField';
-
-const schema = z
-  .object({
-    teamName: z.string().min(1, 'Required'),
-    domain: z.string().min(1, 'Required'),
-    // avatar: z.string().optional(),
-  })
-  .or(
-    z.object({
-      teamId: z.string().min(1, 'Required'),
-    })
-  );
-
-type RegisterValues = {
-  teamName: string;
-  domain: string;
-  // avatar?: string;
-  teamId: string;
-};
-
-const team = [{ name: 'test', id: '4234234f' }];
-
-const RegisterForm = () => {
-  // const [chooseTeam, setChooseTeam] = useState(false);
-  const chooseTeam = false;
-
-  const onSubmit = (data: RegisterValues) => {
-    console.log(data);
-  };
-
-  return (
-    <div>
-      <Form<RegisterValues, typeof schema>
-        onSubmit={(values: RegisterValues) => {
-          onSubmit(values);
-        }}
-        schema={schema}
-      >
-        {({ register, formState }) => (
-          <>
-            {chooseTeam && team.length > 0 ? (
-              <SelectField
-                label="Choose Team"
-                error={formState.errors['teamId']}
-                registration={register('teamId')}
-                options={team.map((team) => ({
-                  label: team.name,
-                  value: team.id,
-                }))}
-              />
-            ) : (
-              <>
-                <InputField
-                  type="text"
-                  label="Team Name"
-                  error={formState.errors['teamName']}
-                  registration={register('teamName')}
-                />
-                <InputField
-                  type="text"
-                  label="Domain"
-                  error={formState.errors['domain']}
-                  registration={register('domain')}
-                />
-                {/* <InputField
-                  type="text"
-                  label="Avatar"
-                  error={formState.errors['avatar']}
-                  registration={register('avatar')}
-                /> */}
-              </>
-            )}
-            <button type="submit" className="w-full bg-green-200">
-              Register
-            </button>
-          </>
-        )}
-      </Form>
-    </div>
-  );
-};
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: 'from tRPC' });
   const { data: sessionData, status } = useSession();
-  // console.log(sessionData, 'EVO ME');
 
   if (status === 'loading') return <div>Loadinng...</div>;
 
