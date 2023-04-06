@@ -1,3 +1,4 @@
+import { UserRole } from '@prisma/client';
 import { z } from 'zod';
 
 import {
@@ -32,6 +33,9 @@ export const teamRouter = createTRPCRouter({
       try {
         await ctx.prisma.team.create({
           data: {
+            users: {
+              connect: { id: ctx.session.user.id },
+            },
             name: input.name,
             domain: input.domain,
             avatar: input.avatar,
@@ -55,6 +59,15 @@ export const teamRouter = createTRPCRouter({
                 columns: true,
               },
             },
+          },
+        });
+
+        await ctx.prisma.user.update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            role: UserRole.ADMIN,
           },
         });
       } catch (error) {

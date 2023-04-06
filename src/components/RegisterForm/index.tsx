@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { z } from 'zod';
 import { Form, InputField, SelectField } from '../Form';
+import { api } from '~/utils/api';
 
 const schema = z
   .object({
-    teamName: z.string().min(1, 'Required'),
+    name: z.string().min(1, 'Required'),
     domain: z.string().min(1, 'Required'),
     // avatar: z.string().optional(), //TODO:
   })
@@ -15,13 +16,11 @@ const schema = z
   );
 
 type RegisterValues = {
-  teamName: string;
+  name: string;
   domain: string;
   // avatar?: string;
   teamId: string;
 };
-
-const team = [{ name: 'test', id: '4234234f' }];
 
 const Toogle = ({ onClick }: { onClick: () => void }) => {
   return (
@@ -38,8 +37,16 @@ const Toogle = ({ onClick }: { onClick: () => void }) => {
 export const RegisterForm = () => {
   const [chooseTeam, setChooseTeam] = useState(false);
 
+  const { data: teams } = api.team.getAll.useQuery();
+  const { mutate: createTeam } = api.team.create.useMutation();
+  const { mutate: joinTeam } = api.user.joinTeam.useMutation();
+
   const onSubmit = (data: RegisterValues) => {
-    console.log(data);
+    if (data.hasOwnProperty('teamId')) {
+      joinTeam(data);
+      return;
+    }
+    createTeam({ ...data, avatar: '' });
   };
 
   return (
@@ -53,13 +60,13 @@ export const RegisterForm = () => {
       {({ register, formState }) => (
         <>
           <Toogle onClick={() => setChooseTeam((toggle) => !toggle)} />
-          {chooseTeam && team.length > 0 ? (
+          {chooseTeam && teams?.length !== 0 && !!teams ? (
             <SelectField
               className="w-full p-1"
               label="Choose Team"
               error={formState.errors['teamId']}
               registration={register('teamId')}
-              options={team.map((team) => ({
+              options={teams?.map((team) => ({
                 label: team.name,
                 value: team.id,
               }))}
@@ -69,8 +76,8 @@ export const RegisterForm = () => {
               <InputField
                 type="text"
                 label="Team Name"
-                error={formState.errors['teamName']}
-                registration={register('teamName')}
+                error={formState.errors['name']}
+                registration={register('name')}
               />
               <InputField
                 type="text"
