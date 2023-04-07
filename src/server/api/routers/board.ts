@@ -2,23 +2,21 @@ import { z } from 'zod';
 
 import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
-export const CreateBoardScheme = z.object({
+const CreateBoardScheme = z.object({
   name: z.string(),
-  teamId: z.string(),
+  teamId: z.string().cuid(),
 });
-
-export type CreateBoardType = z.infer<typeof CreateBoardScheme>;
 
 export const boardRouter = createTRPCRouter({
   // QUERIES:
   getAll: protectedProcedure
-    .input(z.object({ teamId: z.string() }))
+    .input(z.object({ teamId: z.string().cuid() }))
     .query(({ ctx }) => {
       return ctx.prisma.board.findMany();
     }),
 
   getById: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().cuid() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.board.findFirst({
         where: {
@@ -52,7 +50,7 @@ export const boardRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.board.delete({

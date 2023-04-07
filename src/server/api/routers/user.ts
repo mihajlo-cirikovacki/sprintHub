@@ -5,7 +5,9 @@ import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
 export const userRouter = createTRPCRouter({
   updateRole: protectedProcedure
-    .input(z.object({ userId: z.string(), role: z.nativeEnum(UserRole) }))
+    .input(
+      z.object({ userId: z.string().cuid(), role: z.nativeEnum(UserRole) })
+    )
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.user.update({
@@ -22,7 +24,7 @@ export const userRouter = createTRPCRouter({
     }),
 
   joinTeam: protectedProcedure
-    .input(z.object({ teamId: z.string() }))
+    .input(z.object({ teamId: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.user.update({

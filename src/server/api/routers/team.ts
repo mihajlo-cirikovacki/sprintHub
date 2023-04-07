@@ -7,13 +7,11 @@ import {
   protectedProcedure,
 } from '~/server/api/trpc';
 
-export const CreateTeamSchema = z.object({
+const CreateTeamSchema = z.object({
   name: z.string(),
   domain: z.string(),
   avatar: z.string(),
 });
-
-export type CreateTeamType = z.infer<typeof CreateTeamSchema>;
 
 export const teamRouter = createTRPCRouter({
   // QUERIES:
@@ -76,7 +74,7 @@ export const teamRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.team.delete({
