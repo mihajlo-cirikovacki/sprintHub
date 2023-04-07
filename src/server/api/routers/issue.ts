@@ -1,19 +1,14 @@
+import { IssuePriority } from '@prisma/client';
 import { z } from 'zod';
 
 import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
-export enum IssuePriorityEnum {
-  HIGH = 'HIGH',
-  MEDIUM = 'MEDIUM',
-  LOW = 'LOW',
-}
-
 export const createIssueScheme = z.object({
   name: z.string(),
   description: z.string(),
-  priority: z.nativeEnum(IssuePriorityEnum).default(IssuePriorityEnum.MEDIUM),
+  priority: z.nativeEnum(IssuePriority).default(IssuePriority.MEDIUM),
   columnId: z.string(),
-  assigneeId: z.string(),
+  assigneeId: z.string().cuid(),
 });
 
 export type CreateIssueType = z.infer<typeof createIssueScheme>;
@@ -21,7 +16,7 @@ export type CreateIssueType = z.infer<typeof createIssueScheme>;
 export const issueRouter = createTRPCRouter({
   // QUERIES:
   getAll: protectedProcedure
-    .input(z.object({ columnId: z.string() }))
+    .input(z.object({ columnId: z.string().cuid() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.issue.findMany({
         where: {
@@ -50,7 +45,7 @@ export const issueRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.issue.delete({

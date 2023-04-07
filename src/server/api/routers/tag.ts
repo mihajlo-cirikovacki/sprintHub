@@ -2,17 +2,15 @@ import { z } from 'zod';
 
 import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
-export const createTagScheme = z.object({
+const createTagScheme = z.object({
   name: z.string(),
-  boardId: z.string(),
+  boardId: z.string().cuid(),
 });
-
-export type CreateTagType = z.infer<typeof createTagScheme>;
 
 export const tagRouter = createTRPCRouter({
   // QUERIES:
   getAll: protectedProcedure
-    .input(z.object({ boardId: z.string() }))
+    .input(z.object({ boardId: z.string().cuid() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.tag.findMany({
         where: {
@@ -38,7 +36,7 @@ export const tagRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.tag.delete({
