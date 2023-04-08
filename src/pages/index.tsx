@@ -1,9 +1,11 @@
-import { type NextPage } from 'next';
+import type { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 import { RegisterForm } from '~/components/RegisterForm';
+import { getServerAuthSession } from '~/server/auth';
+import { prisma } from '~/server/db';
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -72,6 +74,43 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const session = await getServerAuthSession(ctx);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  const team = await prisma.team.findFirst({
+    where: {
+      id: session?.user.teamId,
+    },
+
+    select: {
+      name: true,
+      domain: true,
+    },
+  });
+
+  if (team) {
+    return {
+      redirect: {
+        destination: `/${team.domain}/team/${team.name}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session: null },
+  };
+};
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
