@@ -78,30 +78,21 @@ export default Home;
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const session = await getServerAuthSession(ctx);
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
+  if (session?.user.teamId) {
+    const team = await prisma.team.findFirst({
+      where: {
+        id: session?.user.teamId,
       },
-    };
-  }
 
-  const team = await prisma.team.findFirst({
-    where: {
-      id: session?.user.teamId,
-    },
+      select: {
+        name: true,
+        domain: true,
+      },
+    });
 
-    select: {
-      name: true,
-      domain: true,
-    },
-  });
-
-  if (team) {
     return {
       redirect: {
-        destination: `/${team.domain}/team/${team.name}`,
+        destination: `/${team?.domain}/team/${team?.name}`,
         permanent: false,
       },
     };
