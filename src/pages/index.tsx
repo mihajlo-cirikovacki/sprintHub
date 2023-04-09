@@ -92,7 +92,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     return {
       redirect: {
-        destination: `/${team?.domain}/team/${team?.name}`,
+        destination: `/${team?.domain ?? ''}/team/${team?.name ?? ''}`,
         permanent: false,
       },
     };
