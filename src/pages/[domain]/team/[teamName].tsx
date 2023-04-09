@@ -20,7 +20,7 @@ const Team = () => {
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const session = await getServerAuthSession(ctx);
 
-  if (!session) {
+  if (!session?.user.teamId) {
     return {
       redirect: {
         destination: '/',
