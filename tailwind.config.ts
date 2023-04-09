@@ -4,13 +4,15 @@ export default {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        inter: ['var(--font-inter)'],
+        oswald: ['var(--font-oswald)'],
+      },
       colors: {
         primary: {
           DEFAULT: '#db924b',
           dark: '#af753c',
           text: '#56310d ',
-          // bg: '#1e1e1e' //TODO I'm not sure yet?
-          bg: '#20161f',
         },
         secondary: {
           DEFAULT: '#263e3f',
@@ -43,6 +45,11 @@ export default {
           dark: '#9d9d9d',
         },
         link: '#c48244',
+      },
+      backgroundColor: {
+        //TODO: I'm not sure yet?
+        primary: '#1e1e1e',
+        // primary: '#20161f',
       },
     },
   },
